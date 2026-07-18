@@ -29,8 +29,11 @@ cd maps-search
 # Install dependencies
 pip install daytona-sdk
 
-# Set up your Daytona API key
-echo 'DAYTONA_API_KEY=dtn_your_key_here' >> ~/.hermes/.env
+# Set your Daytona API key as an environment variable
+export DAYTONA_API_KEY="dtn_your_key_here"
+
+# Or put it in a .env file (loaded automatically)
+echo 'DAYTONA_API_KEY=dtn_your_key_here' >> .env
 
 # Make the script executable
 chmod +x maps_search.py
@@ -103,13 +106,13 @@ python3 maps_search.py --destroy
 | Cold start (oneshot) | ~6-8s | Full sandbox spawn + browser install |
 | Warm (persistent) | ~6-8s | Reuses live sandbox, no setup overhead |
 
-The persistent sandbox mode uses a local cache file (`~/.hermes/cache/maps_sandbox.json`) to track the running sandbox. Use `--destroy` to clean up when done.
+The persistent sandbox mode uses a local cache file to track the running sandbox ID. Use `--destroy` to clean up when done.
 
 ## Prerequisites
 
 - **Daytona API Key** — sign up at [daytona.io](https://daytona.io) and get your API key
 - **Python 3.10+** with `daytona-sdk` installed
-- The tool handles all dependencies inside the sandbox automatically
+- The tool handles all dependencies (Playwright, Chromium) inside the sandbox automatically
 
 ## Project Structure
 
@@ -123,8 +126,8 @@ maps-search/
 
 ## Security
 
-- **No API keys in code** — the Daytona API key is loaded from `~/.hermes/.env` at runtime, never hardcoded
-- **Sandbox isolation** — all browser automation runs inside an isolated Daytona sandbox with a clean IP
+- **No API keys in code** — the Daytona API key is read from the `DAYTONA_API_KEY` environment variable at runtime, never hardcoded
+- **Sandbox isolation** — all browser automation runs inside an isolated Daytona sandbox with a clean exit IP
 - **Payload safety** — user queries are sanitized (printable-only, max 200 chars) and base64-encoded before transmission
 - **No Google API costs** — this tool uses browser automation, not paid Google APIs
 - **CAPTCHA protection** — automatically detects rate-limiting pages and exits gracefully
